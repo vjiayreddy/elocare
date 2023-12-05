@@ -47,18 +47,16 @@ const PatientsAndRecordsSearchComponent = () => {
           <Grid item container xs={12} spacing={1}>
             <Grid item xs>
               <SearchInputComponent
-                inputBaseProps={{
-                  fullWidth: true,
-                  onChange: (e) => {
-                    setSearchTerm(e.target.value);
-                  },
-                  placeholder:
-                    "Search for Patient Number, Patient Name, or IRB Number",
+                placeholder="Search for Patient Number, Patient Name, or IRB Number"
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
                 }}
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" onClick={handleSearch}>Search</Button>
+              <Button variant="contained" onClick={handleSearch}>
+                Search
+              </Button>
             </Grid>
           </Grid>
         </Grid>
