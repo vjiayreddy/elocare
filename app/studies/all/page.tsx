@@ -29,6 +29,7 @@ const AllStudiesPage = () => {
     fetchAllTemplates({});
   }, []);
 
+
   return (
     <MainLayoutComponent>
       <Box mt={3} mb={4}>
@@ -74,16 +75,7 @@ const AllStudiesPage = () => {
             <Box pl={15}>
               <Grid spacing={4} container>
                 <Grid item xs={12}>
-                  <SearchInputComponent
-                    inputBaseProps={{
-                      fullWidth: true,
-                      placeholder:
-                        "Search all assessment templates by name, condition, or description",
-                      sx: {
-                        backgroundColor: "#",
-                      },
-                    }}
-                  />
+                  <SearchInputComponent placeholder="Search for templates..." />
                 </Grid>
                 {data?.data?.conditionBasedAssessmentTemplate?.length > 0 && (
                   <>
@@ -142,6 +134,7 @@ const AllStudiesPage = () => {
                                               description: t?.description,
                                               isDoctorLocked: t?.isDoctorLocked,
                                               projectId: binderId,
+                                              isEditable: t?.isEditable,
                                             })
                                           );
                                           setOpenModel(true);

@@ -5,7 +5,7 @@ import {
   useCreateStudyMutation,
   useUpdateStudyMutation,
 } from "@/redux/api/studiesApi";
-import { CREATE_NEW_STUDY } from "@/utils/constants";
+import { CREATE_NEW_STUDY, PARKINSON_DISEASE } from "@/utils/constants";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
@@ -56,11 +56,12 @@ const CreateStudyForm = ({
           projectId: selectTemplateStudy?.projectId,
           isDoctorLocked: selectTemplateStudy?.isDoctorLocked,
           description: selectTemplateStudy?.description,
+          isEditable:selectTemplateStudy?.isEditable
         })) as any;
         if (response?.data.status === "success" && response?.data?.data) {
           toast.success("Assessment created successfully");
           router.push(
-            `${APP_ROUTES.All_STUDIES}/${response?.data?.data?.study?._id}`
+            `${APP_ROUTES.All_STUDIES}/${response?.data?.data?.study?._id}?isEditable=${response?.data?.data?.study?.isEditable}`
           );
         }
       }
@@ -99,7 +100,10 @@ const CreateStudyForm = ({
               onClick={handleSubmit(onSubmit)}
               btnProps={{
                 fullWidth: true,
-                disabled: isLoadingCreateStudy,
+                disabled:
+                  isLoadingCreateStudy ||
+                  selectTemplateStudy?.assessmentTemplateId ===
+                    PARKINSON_DISEASE,
               }}
             >
               {selectTemplateStudy?.isUpdating

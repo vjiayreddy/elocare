@@ -7,6 +7,7 @@ import {
 import { Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { API_ROUTES } from "./routers";
+import { API_URL } from "@/utils/constants";
 
 export const updateSession = (session: Session, token: JWT) => {
   if (token) {
@@ -35,24 +36,21 @@ export const updateToken = (token: JWT, user: User) => {
 };
 
 export const userLogin = async (payload: UserLoginPayload) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}${API_ROUTES.LOGIN}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: payload.email,
-        password: payload.password,
-      }),
-    }
-  );
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: payload.email,
+      password: payload.password,
+    }),
+  });
   const data = await response.json();
   return data;
 };
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     signUpUser: builder.mutation<IGenericResponse, UserRegistrationPayload>({
       query: (body) => {

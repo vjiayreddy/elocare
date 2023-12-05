@@ -10,10 +10,7 @@ import AssessmentCardComponent from "@/components/Common/Cards/AssessmentCard/As
 import UserAvatarWithLabel from "@/components/Common/UserAvatarWithLabel/UserAvatarWithLabel";
 import TagComponent from "@/components/Common/Tag/Tag";
 import DropDownWithCheckBoxComponent from "@/components/Common/DropDowns/DropDownWithCheckBox";
-import {
-  useLazyFetchConditionalBasedAssessmentTemplatesQuery,
-  useLazyFetchSingleTemplateQuestionsQuery,
-} from "@/redux/api/studiesApi";
+import { useLazyFetchConditionalBasedAssessmentTemplatesQuery } from "@/redux/api/studiesApi";
 import { useParams, useRouter, usePathname } from "next/navigation";
 import { APP_ROUTES } from "@/routes";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,6 +46,7 @@ const ViewStudyTemplate = () => {
       );
     }
   }, [dataConditionalBasedAssessmentTemplates]);
+
 
   return (
     <MainLayoutComponent>
@@ -106,14 +104,10 @@ const ViewStudyTemplate = () => {
 
               <Grid item xs={12}>
                 <Typography variant="body1">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
+                  {
+                    selectedTemplateQuestionData?.assessmentTemplateData
+                      ?.description
+                  }
                 </Typography>
               </Grid>
             </Grid>

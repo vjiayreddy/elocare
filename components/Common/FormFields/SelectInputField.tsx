@@ -21,6 +21,7 @@ interface SelectInputFieldComponentProps {
   targetValue: string;
   lableValue: string;
   size?: "small" | "medium";
+  readOnly?: boolean;
 }
 
 const SelectInputFieldComponent = ({
@@ -35,6 +36,7 @@ const SelectInputFieldComponent = ({
   defaultValue,
   lableValue,
   selectFilesProps,
+  readOnly,
 }: SelectInputFieldComponentProps) => {
   return (
     <Controller
@@ -47,6 +49,7 @@ const SelectInputFieldComponent = ({
           <FormControl sx={{ minWidth: "100%" }} size={size}>
             <InputLabel id={id}>{label}</InputLabel>
             <Select
+              readOnly={readOnly}
               {...field}
               fullWidth={true}
               labelId={id}

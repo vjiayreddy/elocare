@@ -12,7 +12,7 @@ import {
   useUpdateStudyBulkQuestionsMutation,
   useUpdateStudyMutation,
 } from "@/redux/api/studiesApi";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import {
   QUESTION_TYPES,
@@ -30,10 +30,13 @@ import { filterResponseType } from "@/utils/actions";
 import ClosedDialogComponent from "@/components/Common/Dialogs/ClosedDialog/ClosedDialog";
 import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
+import LoadingButtonComponent from "@/components/Common/Buttons/LoadingButton";
 
 const StudyAssessmentDetails = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const params = useParams();
+  const searchParams = useSearchParams();
+  const isEditable = searchParams.get("isEditable");
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [selectedAudience, setSelectedAudiences] = useState<string[]>([]);
   const [updateStudy, { isLoading: isLoadingUpdateStudy }] =
@@ -75,17 +78,19 @@ const StudyAssessmentDetails = () => {
           studyId: params?.studyId as string,
           questionType: [item?.questionType],
           responseType: item?.responseType?.map((item: any) => item?.value),
-          options: item?.options || [],
-          inputField: item?.inputField,
-          isRequired: true,
         });
       });
-      console.log(payload);
     }
 
-    updateStudyBulkQuestions(payload)
-      .then((response: any) => {})
-      .catch((error) => {});
+    updateStudyBulkQuestions({
+      questions: payload,
+    })
+      .then((response: any) => {
+        toast.success("Your changes have been successfully saved");
+      })
+      .catch((error) => {
+        toast.success("Oops! Something went wrong. Please try again later");
+      });
   };
 
   useEffect(() => {
@@ -95,10 +100,12 @@ const StudyAssessmentDetails = () => {
         data.map((question: any) => {
           questions.push({
             title: question?.title,
+            _id: question?._id,
             value: question?.value,
             questionType: question?.questionType?.[0],
             responseType: filterResponseType(question?.responseType),
             stage: question?.stage,
+            demoVideoUrl: question?.demoVideoUrl,
           });
         });
         reset({
@@ -138,14 +145,16 @@ const StudyAssessmentDetails = () => {
             <Button color="inherit">Cancel</Button>
           </Grid>
           <Grid item>
-            <Button
-              color="inherit"
-              onClick={()=>{
-                //handleSubmit(handleSubmitQuestions)
+            <LoadingButtonComponent
+              showLoading={isLoadingUpdateBlukQuestion}
+              btnProps={{
+                color: "inherit",
+                disabled: isEditable === "false" || isLoadingUpdateBlukQuestion,
               }}
+              onClick={handleSubmit(handleSubmitQuestions)}
             >
               Save Changes
-            </Button>
+            </LoadingButtonComponent>
           </Grid>
           <Grid item>
             <Button onClick={openConfirmModel} color="primary">
@@ -189,6 +198,12 @@ const StudyAssessmentDetails = () => {
                       defaultValue={index + 1}
                       {...register(`questions.${index}.stage`)}
                     />
+                    <input
+                      type="hidden"
+                      defaultValue={question?._id}
+                      {...register(`questions.${index}._id`)}
+                    />
+
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Box mb={1}>
@@ -215,6 +230,7 @@ const StudyAssessmentDetails = () => {
                         </Box>
                         <SelectInputFieldComponent
                           defaultValue={question.questionType}
+                          readOnly={true}
                           options={QUESTION_TYPES_OPTIONS}
                           targetValue="value"
                           lableValue="label"
@@ -233,7 +249,9 @@ const StudyAssessmentDetails = () => {
                         watchQuestions[index].questionType ===
                           QUESTION_TYPES.INTRODUCTION ||
                         watchQuestions[index].questionType ===
-                          QUESTION_TYPES.TEXT) && (
+                          QUESTION_TYPES.TEXT ||
+                        watchQuestions[index].questionType ===
+                          QUESTION_TYPES.VIDEO) && (
                         <Grid item xs={12}>
                           <Box mb={1}>
                             {watchQuestions[index].questionType ===
@@ -252,12 +270,37 @@ const StudyAssessmentDetails = () => {
                               control={control}
                               rules={{
                                 required:
-                                  "Question is a required field. Please provide a question.",
+                                  "Please fill out all required fields before submitting the form.",
                               }}
                               textFieldProps={{
-                                placeholder: "Enter Question",
+                                placeholder: "",
                                 multiline: true,
                                 rows: 5,
+                              }}
+                            />
+                          </Box>
+                        </Grid>
+                      )}
+
+                      {watchQuestions[index].questionType ===
+                        QUESTION_TYPES.VIDEO && (
+                        <Grid item xs={12}>
+                          <Box mb={1}>
+                            <FormLabel>Video Demo Url*</FormLabel>
+                          </Box>
+                          <Box>
+                            <TextInputFieldComponent
+                              id="question"
+                              name={`questions.${index}.demoVideoUrl`}
+                              label=""
+                              defaultValue={question?.demoVideoUrl}
+                              control={control}
+                              rules={{
+                                required:
+                                  "Please fill out all required fields before submitting the form",
+                              }}
+                              textFieldProps={{
+                                placeholder: "Enter demoVideoUrl",
                               }}
                             />
                           </Box>
@@ -274,6 +317,7 @@ const StudyAssessmentDetails = () => {
                             <Box>
                               <AutoCompleteInputFiled
                                 control={control}
+                                readOnly={true}
                                 rules={{
                                   required: "Select atleast one member",
                                 }}
@@ -292,13 +336,13 @@ const StudyAssessmentDetails = () => {
                   </Box>
                 </QuestionAccordion>
               ))}
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <AddQuestionButtonComponent
                   onClick={() => {
                     append(defaultQuestionValues);
                   }}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
         )}

@@ -64,6 +64,8 @@ const CreateFolderForm = ({
     };
   }, []);
 
+
+
   return (
     <ClosedDialogComponent
       modelTitle={CREATE_NEW_PROJECT_FOLDER}

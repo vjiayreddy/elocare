@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ROUTES } from "./routers";
 import _ from "lodash";
+import { API_URL } from "@/utils/constants";
 
 export const patientApi = createApi({
   reducerPath: "patientsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     filterPatients: builder.query<any, { dateOfBirth?: string }>({
       query: ({ dateOfBirth }) => {

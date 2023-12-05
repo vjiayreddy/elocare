@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ROUTES } from "./routers";
 import _ from "lodash";
+import { API_URL } from "@/utils/constants";
 
 export interface CreateFolterPayload {
   title: string;
@@ -33,7 +34,7 @@ interface StudiesAndProjectFoldersResponseType {
 
 export const studiesApi = createApi({
   reducerPath: "studiesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL}),
   tagTypes: ["fetchFoldersAndStudies"],
   endpoints: (builder) => ({
     createFolder: builder.mutation<any, CreateFolterPayload>({
@@ -76,6 +77,7 @@ export const studiesApi = createApi({
         projectId?: string;
         assessmentTemplateId: string;
         description: string;
+        isEditable?: string
       }
     >({
       invalidatesTags: ["fetchFoldersAndStudies"],
@@ -99,8 +101,18 @@ export const studiesApi = createApi({
             title,
             patientIds,
           },
+          invalidatesTags: ["fetchFoldersAndStudies"],
         };
       },
+    }),
+    deleteStudy: builder.mutation<any, { studyId: string }>({
+      query: ({ studyId }) => {
+        return {
+          url: `${API_ROUTES.DELETE_STUDY}/${studyId}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["fetchFoldersAndStudies"],
     }),
     updateStudyBulkQuestions: builder.mutation<any, any>({
       query: (body) => {
@@ -228,5 +240,6 @@ export const {
   useLazyFetchConditionalBasedAssessmentTemplatesQuery,
   useLazyFetchSingleTemplateQuestionsQuery,
   useFetchStudiesByFolderIdQuery,
+  useDeleteStudyMutation,
   usePrefetch,
 } = studiesApi;

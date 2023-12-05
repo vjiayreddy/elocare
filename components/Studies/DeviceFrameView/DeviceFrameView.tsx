@@ -13,6 +13,7 @@ import { APP_ROUTES } from "@/routes";
 import { useDispatch } from "react-redux";
 import CreateStudyForm from "../CreateFolderForm/CreateStudyForm";
 import { setTemplateStudy } from "@/redux/reducers/projectFolderAndstudySlice";
+import { PARKINSON_DISEASE } from "@/utils/constants";
 
 const StyledDeviceFrameView = styled(Box)(({ theme }) => ({
   minHeight: 700,
@@ -49,6 +50,7 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
   const searchParams = useSearchParams();
   const binderId = searchParams.get("binderId");
 
+
   return (
     <StyledDeviceFrameView>
       <Box component="div" className="__header">
@@ -61,6 +63,10 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
             </Grid>
             <Grid item>
               <LoadingButtonComponent
+                btnProps={{
+                  disabled:
+                    questions?.assessmentTemplateId === PARKINSON_DISEASE,
+                }}
                 onClick={() => {
                   dispatch(
                     setTemplateStudy({
@@ -68,9 +74,10 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
                       title: questions?.assessmentTemplateData?.title,
                       isDoctorLocked:
                         questions?.assessmentTemplateData?.isDoctorLocked,
-                        description:
+                      description:
                         questions?.assessmentTemplateData?.description,
                       projectId: binderId,
+                      isEditable: questions?.assessmentTemplateData.isEditable,
                     })
                   );
                   setOpenModel(true);

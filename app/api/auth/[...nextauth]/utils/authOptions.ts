@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { updateSession, updateToken, userLogin } from "@/redux/api/authApi";
 import { APP_ROUTES } from "@/routes";
+import { NEXT_PUBLIC_AUTH_SECRET } from "@/utils/constants";
 
 const authOptions: AuthOptions = {
   session: {
@@ -23,7 +24,6 @@ const authOptions: AuthOptions = {
           password: credentials.password,
         });
 
-        console.log(response);
 
         if (response?.status === "failure" && !response?.data) {
           throw new Error(response?.message);
@@ -44,7 +44,7 @@ const authOptions: AuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
+  secret: NEXT_PUBLIC_AUTH_SECRET,
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {

@@ -6,6 +6,7 @@ export enum API_ROUTES {
   DELETE_FOLDER = "project/delete",
   CREATE_STUDY = "/project/study/create",
   UPDATE_STUDY = "/project/study/update",
+  DELETE_STUDY = "/project/study/delete",
   UPDATE_STUDY_BLUK_QUESTIONS = "/question/update-bulk-study-question",
   FETCH_TEMPLATES = "/project/condition-based-assessment-template/fetch-dashboard-analytics",
   FETCH_CONDITIONAL_BASED_CATEGORY_TEMPLATES = "/project/condition-based-assessment-template/fetch",
@@ -23,6 +24,5 @@ export enum API_ROUTES {
   FETCH_QUESTION_TYPES = "/question/get-question-option-types",
   CREATE_SURVEY_QUESTION = "/question/create-survey-question",
   UPDATE_SURVEY_QUESTION = "/question/update-survey-question",
-  FETCH_SINGLE_SURVEY_QUESTIONS = "/question/fetch",
   FETCH_EMOJIS = "/emoji/fetch",
 }

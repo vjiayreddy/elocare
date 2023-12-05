@@ -106,10 +106,11 @@ const StudiesPage = () => {
           </Grid>
           {!_.isEmpty(data?.data.projectData) ? (
             <Fragment>
-              {data?.data.studyData.map((item, index) => (
+              {data?.data.studyData.map((item:any, index) => (
                 <Grid item xs={3} key={index}>
                   <StudyCardComponent
                     id={item?._id as string}
+                    isEditable={item?.isEditable}
                     key={item?._id}
                     label={item?.label as string}
                     title={item?.title as string}

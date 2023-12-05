@@ -6,6 +6,7 @@ export const APP_ROUTES = {
 };
 export const CREATE_NEW_PROJECT_FOLDER = "Create new binder";
 export const CREATE_NEW_STUDY = "Create new assessment";
+export const PARKINSON_DISEASE = "6560b2d431d4dca16bbb264e";
 
 export const mainMenus = [
   {
@@ -99,6 +100,7 @@ export const QUESTION_TYPES = {
 export const defaultQuestionValues = {
   title: "",
   value: "",
+  _id: "",
   questionType: "",
   options: [],
   responseType: [],
@@ -116,7 +118,9 @@ export const AUTH_STATUS = {
   UNAUTHENTICATED: "unauthenticated",
 };
 
-
+export const API_URL = "https://sa-ransolutions.hotrasoft.com:8000";
+export const NEXT_PUBLIC_AUTH_SECRET =
+  "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5NDY3NTU1NywiaWF0IjoxNjk0Njc1NTU3fQ.uGCn3B_HFu_FPdfYB-ikGoBlrwAx5YjVfzqjN6olxHA";
 
 export const AUTH_API_STATUS = {
   PASSWORD_NOT_MATCHED: "Password does not match",

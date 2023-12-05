@@ -22,7 +22,6 @@ const StudiesListPage = () => {
     router.push(`${APP_ROUTES.All_STUDIES}?binderId=${params?.id}`);
   };
 
-
   return (
     <MainLayoutComponent>
       <Box mt={5}>
@@ -48,6 +47,7 @@ const StudiesListPage = () => {
                   title={item?.title as string}
                   status={`${item?.members?.length} responses`}
                   iconType="STUDY"
+                  onRenameFolder={() => {}}
                 />
               </Grid>
             ))}

@@ -21,6 +21,7 @@ interface StudyCardComponentProps {
   status: string;
   label: string;
   id: string;
+  isEditable?: boolean;
   onRenameFolder: () => void;
 }
 
@@ -38,6 +39,7 @@ const StudyCardComponent = ({
   iconType = "FOLDER",
   status,
   id,
+  isEditable,
   onRenameFolder,
 }: StudyCardComponentProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -53,7 +55,7 @@ const StudyCardComponent = ({
 
   const handleViewStudy = () => {
     handleClose();
-    router.push(`${APP_ROUTES.All_STUDIES}/${id}`);
+    router.push(`${APP_ROUTES.All_STUDIES}/${id}?isEditable=${isEditable}`);
   };
 
   return (
