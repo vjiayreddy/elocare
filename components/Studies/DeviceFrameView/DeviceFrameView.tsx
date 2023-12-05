@@ -50,7 +50,6 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
   const searchParams = useSearchParams();
   const binderId = searchParams.get("binderId");
 
-
   return (
     <StyledDeviceFrameView>
       <Box component="div" className="__header">
@@ -76,7 +75,7 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
                         questions?.assessmentTemplateData?.isDoctorLocked,
                       description:
                         questions?.assessmentTemplateData?.description,
-                      projectId: binderId,
+                      projectId: binderId === "null" ? null : binderId,
                       isEditable: questions?.assessmentTemplateData.isEditable,
                     })
                   );
