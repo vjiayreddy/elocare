@@ -36,7 +36,7 @@ export const updateToken = (token: JWT, user: User) => {
 };
 
 export const userLogin = async (payload: UserLoginPayload) => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}${API_ROUTES.LOGIN}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
