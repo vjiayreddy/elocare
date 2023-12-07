@@ -106,6 +106,9 @@ const SignUpFormContainer = () => {
     router.push(APP_ROUTES.HOME);
   }
 
+
+  
+
   return (
     <StyledLoginPage>
       <StyledMainBox>

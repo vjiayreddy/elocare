@@ -62,10 +62,6 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
             </Grid>
             <Grid item>
               <LoadingButtonComponent
-                btnProps={{
-                  disabled:
-                    questions?.assessmentTemplateId === PARKINSON_DISEASE,
-                }}
                 onClick={() => {
                   dispatch(
                     setTemplateStudy({

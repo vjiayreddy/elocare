@@ -37,7 +37,7 @@ const FormMobileInput: React.FC<FormMobileInputProps> = ({
             }}
             forceCallingCode
             label={label}
-            defaultCountry="IN"
+            defaultCountry="US"
             focusOnSelectCountry
             InputProps={{
               fullWidth: true,

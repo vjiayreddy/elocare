@@ -56,7 +56,7 @@ const CreateStudyForm = ({
           projectId: selectTemplateStudy?.projectId,
           isDoctorLocked: selectTemplateStudy?.isDoctorLocked,
           description: selectTemplateStudy?.description,
-          isEditable:selectTemplateStudy?.isEditable
+          isEditable: selectTemplateStudy?.isEditable,
         })) as any;
         if (response?.data.status === "success" && response?.data?.data) {
           toast.success("Assessment created successfully");
@@ -100,10 +100,6 @@ const CreateStudyForm = ({
               onClick={handleSubmit(onSubmit)}
               btnProps={{
                 fullWidth: true,
-                disabled:
-                  isLoadingCreateStudy ||
-                  selectTemplateStudy?.assessmentTemplateId ===
-                    PARKINSON_DISEASE,
               }}
             >
               {selectTemplateStudy?.isUpdating
