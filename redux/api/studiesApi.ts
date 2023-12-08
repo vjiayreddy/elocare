@@ -34,7 +34,7 @@ interface StudiesAndProjectFoldersResponseType {
 
 export const studiesApi = createApi({
   reducerPath: "studiesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL}),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   tagTypes: ["fetchFoldersAndStudies"],
   endpoints: (builder) => ({
     createFolder: builder.mutation<any, CreateFolterPayload>({
@@ -77,7 +77,8 @@ export const studiesApi = createApi({
         projectId?: string;
         assessmentTemplateId: string;
         description: string;
-        isEditable?: string
+        isEditable?: string;
+        isAsNeededAssessment: boolean;
       }
     >({
       invalidatesTags: ["fetchFoldersAndStudies"],
@@ -126,14 +127,15 @@ export const studiesApi = createApi({
 
     fetchFoldersAndStudies: builder.query<
       { data: StudiesAndProjectFoldersResponseType },
-      any
+      { doctorId: string }
     >({
       providesTags: ["fetchFoldersAndStudies"],
-      query: () => {
+      query: ({ doctorId }) => {
         return {
           url: API_ROUTES.FETCH_FOLDERS_STUDIES,
           method: "GET",
           params: {
+            doctorId,
             sortOrder: JSON.stringify(["alphabetical"]),
           },
         };

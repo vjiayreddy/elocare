@@ -1,14 +1,22 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 
-const BackLableButtonComponent = () => {
+interface BackLableButtonComponentProps extends ButtonProps {
+  title: string;
+}
+
+const BackLableButtonComponent = ({
+  title,
+  ...props
+}: BackLableButtonComponentProps) => {
   return (
     <Button
       startIcon={<img alt="arrow_left" src="/icons/arrow-left.svg" />}
       color="inherit"
       variant="text"
+      {...props}
     >
-      Back to Assessment Gallery
+      {title}
     </Button>
   );
 };

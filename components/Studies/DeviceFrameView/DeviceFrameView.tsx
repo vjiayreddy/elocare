@@ -50,6 +50,8 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
   const searchParams = useSearchParams();
   const binderId = searchParams.get("binderId");
 
+  console.log(questions);
+
   return (
     <StyledDeviceFrameView>
       <Box component="div" className="__header">
@@ -73,6 +75,8 @@ const DeviceFrameView = ({ questions }: DeviceFrameViewProps) => {
                         questions?.assessmentTemplateData?.description,
                       projectId: binderId === "null" ? null : binderId,
                       isEditable: questions?.assessmentTemplateData.isEditable,
+                      isAsNeededAssessment:
+                        questions?.assessmentTemplateData?.isAsNeededAssessment,
                     })
                   );
                   setOpenModel(true);

@@ -29,7 +29,6 @@ const AllStudiesPage = () => {
     fetchAllTemplates({});
   }, []);
 
-
   return (
     <MainLayoutComponent>
       <Box mt={3} mb={4}>
@@ -135,6 +134,8 @@ const AllStudiesPage = () => {
                                               isDoctorLocked: t?.isDoctorLocked,
                                               projectId: binderId,
                                               isEditable: t?.isEditable,
+                                              isAsNeededAssessment:
+                                                t?.isAsNeededAssessment,
                                             })
                                           );
                                           setOpenModel(true);

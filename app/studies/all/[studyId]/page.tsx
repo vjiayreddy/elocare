@@ -12,7 +12,7 @@ import {
   useUpdateStudyBulkQuestionsMutation,
   useUpdateStudyMutation,
 } from "@/redux/api/studiesApi";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import {
   QUESTION_TYPES,
@@ -31,9 +31,11 @@ import ClosedDialogComponent from "@/components/Common/Dialogs/ClosedDialog/Clos
 import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import LoadingButtonComponent from "@/components/Common/Buttons/LoadingButton";
+import { APP_ROUTES } from "@/routes";
 
 const StudyAssessmentDetails = () => {
   const [tabIndex, setTabIndex] = useState(0);
+  const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const isEditable = searchParams.get("isEditable");
@@ -142,7 +144,9 @@ const StudyAssessmentDetails = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs></Grid>
           <Grid item>
-            <Button color="inherit">Cancel</Button>
+            <Button color="inherit" onClick={() => {router.push(APP_ROUTES.STUDIES)}}>
+              Cancel
+            </Button>
           </Grid>
           <Grid item>
             <LoadingButtonComponent

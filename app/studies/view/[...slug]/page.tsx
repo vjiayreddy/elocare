@@ -12,11 +12,11 @@ import TagComponent from "@/components/Common/Tag/Tag";
 import DropDownWithCheckBoxComponent from "@/components/Common/DropDowns/DropDownWithCheckBox";
 import { useLazyFetchConditionalBasedAssessmentTemplatesQuery } from "@/redux/api/studiesApi";
 import { useParams, useRouter, usePathname } from "next/navigation";
-import { APP_ROUTES } from "@/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { setAssessmentTemplateQuestionData } from "@/redux/reducers/projectFolderAndstudySlice";
 
 const ViewStudyTemplate = () => {
+  const router = useRouter();
   const [
     fetchConditionalBasedAssessmentTemplates,
     {
@@ -47,11 +47,13 @@ const ViewStudyTemplate = () => {
     }
   }, [dataConditionalBasedAssessmentTemplates]);
 
-
   return (
     <MainLayoutComponent>
       <Box mt={3} mb={5}>
-        <BackLableButtonComponent />
+        <BackLableButtonComponent
+          title="Back to Assessment Gallery"
+          onClick={() => router.back()}
+        />
       </Box>
       <Grid mb={10} container spacing={3}>
         <Grid item xs={12} container spacing={4}>

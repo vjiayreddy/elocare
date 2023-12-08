@@ -57,6 +57,7 @@ const CreateStudyForm = ({
           isDoctorLocked: selectTemplateStudy?.isDoctorLocked,
           description: selectTemplateStudy?.description,
           isEditable: selectTemplateStudy?.isEditable,
+          isAsNeededAssessment: selectTemplateStudy?.isAsNeededAssessment,
         })) as any;
         if (response?.data.status === "success" && response?.data?.data) {
           toast.success("Assessment created successfully");

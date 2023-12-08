@@ -19,18 +19,27 @@ import { useDispatch } from "react-redux";
 import { APP_ROUTES } from "@/routes";
 import _ from "lodash";
 import CreateStudyForm from "@/components/Studies/CreateFolderForm/CreateStudyForm";
+import { useSession } from "next-auth/react";
 
 const StudiesPage = () => {
   const router = useRouter();
   const [openModel, setOpenModel] = useState(false);
+  const { data: session } = useSession();
   const [openStudyForm, setOpenStudyForm] = useState(false);
   const dispatch = useDispatch();
   const [fetchFoldersAndStudies, { data }] =
     useLazyFetchFoldersAndStudiesQuery();
 
   useEffect(() => {
-    fetchFoldersAndStudies({});
-  }, []);
+    if (session) {
+      fetchFoldersAndStudies({
+        doctorId: session?.user?.id as string,
+      });
+    }
+  }, [session]);
+
+
+  console.log(data)
 
   return (
     <MainLayoutComponent>
@@ -99,14 +108,16 @@ const StudiesPage = () => {
             </Grid>
           )}
 
+
+
           <Grid item xs={12}>
             <Typography mb={2} mt={2} variant="subtitle1">
               Studies
             </Typography>
           </Grid>
-          {!_.isEmpty(data?.data.projectData) ? (
+          {!_.isEmpty(data?.data.studyData) ? (
             <Fragment>
-              {data?.data.studyData.map((item:any, index) => (
+              {data?.data.studyData.map((item: any, index) => (
                 <Grid item xs={3} key={index}>
                   <StudyCardComponent
                     id={item?._id as string}
