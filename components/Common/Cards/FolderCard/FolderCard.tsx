@@ -103,7 +103,7 @@ const FolderCardComponent = ({
           </ListItemAvatar>
           <ListItemText
             primary={
-              <Typography pr={3} noWrap fontWeight={600} variant="subtitle1">
+              <Typography pr={3} noWrap fontWeight={600} variant="subtitle2">
                 {title}
               </Typography>
             }

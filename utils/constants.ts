@@ -18,7 +18,7 @@ export const mainMenus = [
     label: "Studies",
   },
   {
-    url: APP_ROUTES.HOME,
+    url: APP_ROUTES.INSIGHTS,
     label: "Insights",
   },
 ];
@@ -118,7 +118,9 @@ export const AUTH_STATUS = {
   UNAUTHENTICATED: "unauthenticated",
 };
 
-export const API_URL = "https://sa-ransolutions.hotrasoft.com:8000";
+//export const API_URL = "https://sa-ransolutions.hotrasoft.com:8000";
+export const API_URL = "http://54.152.245.9:8080";
+
 export const NEXT_PUBLIC_AUTH_SECRET =
   "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5NDY3NTU1NywiaWF0IjoxNjk0Njc1NTU3fQ.uGCn3B_HFu_FPdfYB-ikGoBlrwAx5YjVfzqjN6olxHA";
 
@@ -132,3 +134,48 @@ export const AUTH_API_STATUS = {
   ASSESSMENT_QUESTION_CREATED_SUCCESSFULL:
     "Created Assessment question successfully",
 };
+
+export const cardsData = [
+  {
+    id: 0,
+    title: "Component Librarys",
+    components: [
+      {
+        id: 100,
+        name: "material ui",
+      },
+      {
+        id: 200,
+        name: "bootstrap",
+      },
+    ],
+  },
+  {
+    id: 1,
+    title: "Javascript Librarys",
+    components: [
+      {
+        id: 300,
+        name: "react",
+      },
+      {
+        id: 400,
+        name: "node",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "react helping Librarys",
+    components: [
+      {
+        id: 500,
+        name: "redux",
+      },
+      {
+        id: 600,
+        name: "recoil",
+      },
+    ],
+  },
+];

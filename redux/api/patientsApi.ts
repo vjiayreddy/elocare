@@ -7,12 +7,12 @@ export const patientApi = createApi({
   reducerPath: "patientsApi",
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
-    filterPatients: builder.query<any, { dateOfBirth?: string }>({
-      query: ({ dateOfBirth }) => {
+    filterPatients: builder.query<any, { search?: string }>({
+      query: ({ search }) => {
         return {
           url: API_ROUTES.FILTER_PATIENTS,
           params: {
-            dateOfBirth,
+            search,
             page: 1,
             limit: 100,
           },

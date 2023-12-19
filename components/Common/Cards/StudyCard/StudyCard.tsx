@@ -32,6 +32,9 @@ const StyledStudyCardComponent = styled(Card)(({ theme }) => ({
   "& .MuiCardContent-root:last-child": {
     paddingBottom: 10,
   },
+  "& .MuiListItemText-secondary":{
+    color:theme.palette.success.main
+  }
 }));
 
 const StudyCardComponent = ({
@@ -88,7 +91,7 @@ const StudyCardComponent = ({
           </ListItemAvatar>
           <ListItemText
             primary={
-              <Typography pr={3} noWrap fontWeight={600} variant="subtitle1">
+              <Typography pr={3} noWrap fontWeight={600} variant="subtitle2">
                 {title}
               </Typography>
             }

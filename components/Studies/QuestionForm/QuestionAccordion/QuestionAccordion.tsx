@@ -37,7 +37,7 @@ const QuestionAccordion = ({
   return (
     <Grid container item xs={12}>
       {number && (
-        <Grid item>
+        <Grid item >
           <StyledQuestionNumber>{number}</StyledQuestionNumber>
         </Grid>
       )}

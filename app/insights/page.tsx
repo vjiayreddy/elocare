@@ -1,11 +1,14 @@
+"use client";
 import React from "react";
 import MainLayoutComponent from "@/components/Layouts/MainLayout/MainLayout";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const InsigthsPage = () => {
   return (
     <MainLayoutComponent>
-      <Typography>InsigthsPage</Typography>
+      <Box mt={2}>
+        <Typography>InsigthsPage</Typography>
+      </Box>
     </MainLayoutComponent>
   );
 };

@@ -3,15 +3,15 @@ import UserListDataGrid from "@/components/Common/DataGrids/UserListDataGrid/Use
 import SearchInputComponent from "@/components/Common/SearchInput/SearchInput";
 import MainLayoutComponent from "@/components/Layouts/MainLayout/MainLayout";
 import { useLazyFilterPatientsQuery } from "@/redux/api/patientsApi";
-import { API_ROUTES } from "@/redux/api/routers";
 import { APP_ROUTES } from "@/routes";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import _ from "lodash";
+import HomeContainerComponent from "@/components/Home/HomeContainer";
+import SearchResultsComponent from "@/components/Home/SearchResults";
+import { Container } from "@mui/material";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -32,45 +32,41 @@ export default function Home() {
   useEffect(() => {
     if (patient) {
       filterPatients({
-        dateOfBirth: patient,
+        search: patient,
       });
     } else {
       filterPatients({});
     }
   }, [router, patient]);
+
   return (
     <MainLayoutComponent>
-      <Box mt={6} mb={4} component="div" className="__layout_header">
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <SearchInputComponent onChange={() => {}} placeholder="Search..." />
-          </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={handleSearch}>
-              Search
-            </Button>
-          </Grid>
-        </Grid>
-        <Box mt={6}>
-          <Typography variant="h4">Search Results</Typography>
-          <Typography variant="body1">
-            {patient ? (
-              <>
-                {userData?.data?.length} results for <b>{patient}</b>
-              </>
-            ) : (
-              <>
-                <>
-                  Total <b>{userData?.data?.length}</b> Users
-                </>
-              </>
-            )}
-          </Typography>
+      <HomeContainerComponent>
+        <Box component="div" className="__section_header">
+          <Container disableGutters maxWidth="lg">
+            <Grid container>
+              <Grid item md={5} xs={12}>
+                <SearchInputComponent
+                  value={searchTerm as string}
+                  onChange={(e) => {
+                    setSearchTeam(e.target.value);
+                  }}
+                  onClickBtn={handleSearch}
+                  btnName="Search"
+                  placeholder="Search..."
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <SearchResultsComponent count={userData?.data?.length || 0} />
+              </Grid>
+            </Grid>
+          </Container>
         </Box>
-      </Box>
-      <Box component="div" className="__layout__content">
-        <UserListDataGrid loading={isLoading} rows={userData?.data || []} />
-      </Box>
+
+        <Box component="div" className="__section_content">
+          <UserListDataGrid loading={isLoading} rows={userData?.data || []} />
+        </Box>
+      </HomeContainerComponent>
     </MainLayoutComponent>
   );
 }

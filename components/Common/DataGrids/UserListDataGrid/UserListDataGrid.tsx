@@ -1,26 +1,28 @@
+'use client';
 import React, { Fragment } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
+import { Container } from "@mui/material";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  borderRadius: 0,
-  borderLeft: "none",
-  borderRight: "none",
+  borderRadius: 5,
   fontSize: 12.4,
+  border: `1px solid ${theme.palette.divider}`,
   "& .MuiDataGrid-cell": {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-    fontSize: 16,
+    fontSize: 14,
   },
   "& .MuiDataGrid-columnHeader": {
-    borderLeft: `1px solid ${theme.palette.divider}`,
     fontWeight: 600,
     backgroundColor: theme.palette.grey[100],
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    fontSize: 16,
+    fontSize: 14,
   },
+  "& .MuiTablePagination-toolbar":{
+    height:40
+  }
 }));
 interface UserListDataGridProps {
   rows: any[];
@@ -34,18 +36,15 @@ const UserListDataGrid = ({ rows, loading }: UserListDataGridProps) => {
       field: "firstName",
       headerName: "First name",
       flex: 1,
-      //width: 150,
     },
     {
       field: "lastName",
       headerName: "Last name",
-      //width: 150,
       flex: 1,
     },
     {
       field: "gender",
       headerName: "Gender",
-      //width: 110,
       flex: 1,
     },
     {
@@ -56,7 +55,6 @@ const UserListDataGrid = ({ rows, loading }: UserListDataGridProps) => {
     {
       field: "dateOfBirth",
       headerName: "DOB",
-      //width: 160,
       flex: 1,
     },
     {
@@ -95,10 +93,11 @@ const UserListDataGrid = ({ rows, loading }: UserListDataGridProps) => {
   ];
 
   return (
-    <Box sx={{ height: 500, width: "100%" }}>
+    <Container disableGutters maxWidth="lg" sx={{ height: "100%"}}>
       <StyledDataGrid
         rows={rows}
         loading={loading}
+        density="compact"
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[5]}
@@ -115,7 +114,7 @@ const UserListDataGrid = ({ rows, loading }: UserListDataGridProps) => {
           },
         }}
       />
-    </Box>
+    </Container>
   );
 };
 

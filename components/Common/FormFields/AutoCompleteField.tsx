@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -48,7 +48,7 @@ const AutoCompleteInputFiled = ({
       defaultValue={defaultValues || null}
       rules={rules}
       render={({ field, fieldState }) => (
-        <>
+        <Fragment>
           <Autocomplete
             id={id}
             size={size}
@@ -114,7 +114,7 @@ const AutoCompleteInputFiled = ({
           {fieldState?.error && (
             <FormHelperText error>{fieldState.error.message}</FormHelperText>
           )}
-        </>
+        </Fragment>
       )}
     ></Controller>
   );

@@ -2,6 +2,7 @@ import authOptions from "@/app/api/auth/[...nextauth]/utils/authOptions";
 import moment from "moment";
 import { getServerSession } from "next-auth";
 import { getCsrfToken, getProviders } from "next-auth/react";
+import _ from "lodash";
 export const getProtocolFormPayload = (payload: any) => {
   const members: string[] = [];
   if (payload?.members?.length > 0) {
@@ -77,4 +78,38 @@ export const getNextAuthProps = async (props: any) => {
     callbackUrl,
     isAuthenticated,
   };
+};
+
+export const getAssessmentQuestionsPayload = (
+  formData: any,
+  studyId: string
+) => {
+  let payload: any[] = [];
+  console.log(formData);
+  formData?.questions?.map((question: any, index: number) => {
+    payload.push({
+      ...(!_.isEmpty(question?._id) && {
+        _id: question?._id,
+      }),
+      title: question?.title,
+      value: question?.value,
+      subQuestion: question?.subQuestion || [],
+      questionType: question?.questionType,
+      responseType: question?.responseType?.map(
+        (response: any) => response?.value
+      ),
+      stage: index + 1,
+      demoVideoUrl: question?.demoVideoUrl || "",
+      unit: "string",
+      isRequired: true,
+      isActive: true,
+      isDeleted: false,
+      studyId: studyId,
+      options: !_.isEmpty(question?.options) ? question?.options : [],
+      hasSubQuestion: !_.isEmpty(question?.subQuestion) ? true : false,
+      conditions: [],
+    });
+  });
+
+  return payload;
 };

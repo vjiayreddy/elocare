@@ -7,17 +7,26 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { Fragment } from "react";
 import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 
 interface MainLayoutComponentProps {
   children: React.ReactNode;
 }
 
-const StyledMainLayoutComponrnt = styled(Container)(({ theme }) => ({
+const StyledMainLayoutComponent = styled(Box)(({ theme }) => ({
   "& .__layout_header": {
     minHeight: 100,
   },
   "& .__layout__content": {
     flexGrow: 1,
+    position: "relative",
+  },
+  "& .__loading__indication": {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
   },
 }));
 
@@ -36,9 +45,7 @@ const MainLayoutComponent = ({ children }: MainLayoutComponentProps) => {
   return (
     <Fragment>
       <AppNavigationComponent />
-      <StyledMainLayoutComponrnt disableGutters maxWidth="lg">
-        {children}
-      </StyledMainLayoutComponrnt>
+      <StyledMainLayoutComponent>{children}</StyledMainLayoutComponent>
     </Fragment>
   );
 };

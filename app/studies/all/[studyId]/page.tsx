@@ -1,7 +1,7 @@
 "use client";
 import MainLayoutComponent from "@/components/Layouts/MainLayout/MainLayout";
 import Box from "@mui/material/Box";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
@@ -28,10 +28,18 @@ import AutoCompleteInputFiled from "@/components/Common/FormFields/AutoCompleteF
 import _ from "lodash";
 import { filterResponseType } from "@/utils/actions";
 import ClosedDialogComponent from "@/components/Common/Dialogs/ClosedDialog/ClosedDialog";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import LoadingButtonComponent from "@/components/Common/Buttons/LoadingButton";
 import { APP_ROUTES } from "@/routes";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import StudiesLayoutComponent from "@/components/Studies/StudiesLayout";
+import WelcomeAssessmentComponent from "@/components/Studies/WelcomeAssessment";
+import TabsSelectionComponent from "@/components/Studies/TabsSelection";
+import { getAssessmentQuestionsPayload } from "@/redux/utils";
+import VideoTemplateFormComponent from "@/components/Studies/QuestionForm/TemplateForms/VideoTemplateForm";
+import IntroductionFormComponent from "@/components/Studies/QuestionForm/TemplateForms/IntroductionForm";
+import VoiceFormComponent from "@/components/Studies/QuestionForm/TemplateForms/VoiceTemplateForm";
 
 const StudyAssessmentDetails = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -41,6 +49,8 @@ const StudyAssessmentDetails = () => {
   const isEditable = searchParams.get("isEditable");
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [selectedAudience, setSelectedAudiences] = useState<string[]>([]);
+  const childrenRef: any = React.useRef({});
+
   const [updateStudy, { isLoading: isLoadingUpdateStudy }] =
     useUpdateStudyMutation();
   const [updateStudyBulkQuestions, { isLoading: isLoadingUpdateBlukQuestion }] =
@@ -51,7 +61,11 @@ const StudyAssessmentDetails = () => {
       questions: [defaultQuestionValues],
     },
   });
-  const { fields: questions, append } = useFieldArray({
+  const {
+    fields: questions,
+    append,
+    move,
+  } = useFieldArray({
     control,
     name: "questions",
   });
@@ -72,18 +86,10 @@ const StudyAssessmentDetails = () => {
   }, [watch]);
 
   const handleSubmitQuestions = (data: any) => {
-    let payload: any[] = [];
-    if (data?.questions?.length > 0) {
-      data?.questions?.map((item: any) => {
-        payload.push({
-          ...item,
-          studyId: params?.studyId as string,
-          questionType: [item?.questionType],
-          responseType: item?.responseType?.map((item: any) => item?.value),
-        });
-      });
-    }
-
+    const payload = getAssessmentQuestionsPayload(
+      data,
+      params?.studyId as string
+    );
     updateStudyBulkQuestions({
       questions: payload,
     })
@@ -96,17 +102,16 @@ const StudyAssessmentDetails = () => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (!_.isEmpty(data)) {
       let questions: any[] = [];
-      if (data) {
-        data.map((question: any) => {
+      if (!_.isEmpty(data?.questions)) {
+        data?.questions.map((question: any) => {
           questions.push({
             title: question?.title,
             _id: question?._id,
             value: question?.value,
             questionType: question?.questionType?.[0],
             responseType: filterResponseType(question?.responseType),
-            stage: question?.stage,
             demoVideoUrl: question?.demoVideoUrl,
           });
         });
@@ -138,226 +143,232 @@ const StudyAssessmentDetails = () => {
       });
   };
 
+  const reorder = (result: any) => {
+    const { source, destination, type } = result;
+    if (!destination) {
+      return;
+    }
+    const sourceIndex = source.index;
+    const destIndex = destination.index;
+
+    if (type === "parentContainer") {
+      move(sourceIndex, destIndex);
+    } else if (type === "childContainer" && source.droppableId) {
+      const reorderChild = childrenRef.current[source.droppableId];
+      if (reorderChild) {
+        reorderChild(sourceIndex, destIndex);
+      }
+    }
+  };
+
   return (
     <MainLayoutComponent>
-      <Box mt={6}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs></Grid>
-          <Grid item>
-            <Button color="inherit" onClick={() => {router.push(APP_ROUTES.STUDIES)}}>
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <LoadingButtonComponent
-              showLoading={isLoadingUpdateBlukQuestion}
-              btnProps={{
-                color: "inherit",
-                disabled: isEditable === "false" || isLoadingUpdateBlukQuestion,
-              }}
-              onClick={handleSubmit(handleSubmitQuestions)}
-            >
-              Save Changes
-            </LoadingButtonComponent>
-          </Grid>
-          <Grid item>
-            <Button onClick={openConfirmModel} color="primary">
-              {selectedAudience?.length > 0
-                ? "Launch Assessment"
-                : "Continue to Audience"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box mt={4}>
-        <Tabs
-          value={tabIndex}
-          onChange={(_, value) => {
-            setTabIndex(value);
-          }}
-        >
-          <Tab label="Questions" />
-          <Tab label="Audience" />
-        </Tabs>
-      </Box>
-      <Box mt={4} mb={4}>
-        {tabIndex === 0 && (
-          <Grid container>
-            <Grid item container md={8} spacing={2}>
-              {questions.map((question, index) => (
-                <QuestionAccordion
-                  key={index + 1}
-                  title={
-                    watchQuestions[index].title
-                      ? watchQuestions[index].title
-                      : "[No Title]"
-                  }
-                  number={`${index + 1}`}
-                  id={`${index + 1}-header`}
-                  ariaControls={`${index + 1}-content`}
-                >
-                  <Box p={2}>
-                    <input
-                      type="hidden"
-                      defaultValue={index + 1}
-                      {...register(`questions.${index}.stage`)}
-                    />
-                    <input
-                      type="hidden"
-                      defaultValue={question?._id}
-                      {...register(`questions.${index}._id`)}
-                    />
-
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Box mb={1}>
-                          <FormLabel>Title *</FormLabel>
-                        </Box>
-                        <TextInputFieldComponent
-                          id="question-title"
-                          name={`questions.${index}.title`}
-                          label=""
-                          defaultValue={question.title}
-                          control={control}
-                          rules={{
-                            required:
-                              "Title is a required field. Please provide a title.",
-                          }}
-                          textFieldProps={{
-                            placeholder: "Enter Title",
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Box mb={1}>
-                          <FormLabel>Add Question Type *</FormLabel>
-                        </Box>
-                        <SelectInputFieldComponent
-                          defaultValue={question.questionType}
-                          readOnly={true}
-                          options={QUESTION_TYPES_OPTIONS}
-                          targetValue="value"
-                          lableValue="label"
-                          label=""
-                          control={control}
-                          id="question-type"
-                          name={`questions.${index}.questionType`}
-                          rules={{
-                            required:
-                              "Add Question Type is a required field. Please provide a Add Question Type.",
-                          }}
-                        />
-                      </Grid>
-                      {(watchQuestions[index].questionType ===
-                        QUESTION_TYPES.AUDIO ||
-                        watchQuestions[index].questionType ===
-                          QUESTION_TYPES.INTRODUCTION ||
-                        watchQuestions[index].questionType ===
-                          QUESTION_TYPES.TEXT ||
-                        watchQuestions[index].questionType ===
-                          QUESTION_TYPES.VIDEO) && (
-                        <Grid item xs={12}>
-                          <Box mb={1}>
-                            {watchQuestions[index].questionType ===
-                            QUESTION_TYPES.TEXT ? (
-                              <FormLabel>Question *</FormLabel>
-                            ) : (
-                              <FormLabel>Content *</FormLabel>
-                            )}
-                          </Box>
-                          <Box>
-                            <TextInputFieldComponent
-                              id="question"
-                              name={`questions.${index}.value`}
-                              label=""
-                              defaultValue={question.value}
-                              control={control}
-                              rules={{
-                                required:
-                                  "Please fill out all required fields before submitting the form.",
-                              }}
-                              textFieldProps={{
-                                placeholder: "",
-                                multiline: true,
-                                rows: 5,
-                              }}
-                            />
-                          </Box>
-                        </Grid>
-                      )}
-
-                      {watchQuestions[index].questionType ===
-                        QUESTION_TYPES.VIDEO && (
-                        <Grid item xs={12}>
-                          <Box mb={1}>
-                            <FormLabel>Video Demo Url*</FormLabel>
-                          </Box>
-                          <Box>
-                            <TextInputFieldComponent
-                              id="question"
-                              name={`questions.${index}.demoVideoUrl`}
-                              label=""
-                              defaultValue={question?.demoVideoUrl}
-                              control={control}
-                              rules={{
-                                required:
-                                  "Please fill out all required fields before submitting the form",
-                              }}
-                              textFieldProps={{
-                                placeholder: "Enter demoVideoUrl",
-                              }}
-                            />
-                          </Box>
-                        </Grid>
-                      )}
-
-                      {watchQuestions[index].questionType !==
-                        QUESTION_TYPES.INTRODUCTION &&
-                        !_.isEmpty(watchQuestions[index].questionType) && (
-                          <Grid item xs={12}>
-                            <Box mb={1}>
-                              <FormLabel>Add Response Type *</FormLabel>
-                            </Box>
-                            <Box>
-                              <AutoCompleteInputFiled
-                                control={control}
-                                readOnly={true}
-                                rules={{
-                                  required: "Select atleast one member",
-                                }}
-                                isEqualValue="value"
-                                targetValue="label"
-                                id="response-type"
-                                name={`questions.${index}.responseType`}
-                                options={QUESTION_TYPES_OPTIONS || []}
-                                multiple={true}
-                                defaultValues={question?.responseType}
-                              />
-                            </Box>
-                          </Grid>
-                        )}
-                    </Grid>
-                  </Box>
-                </QuestionAccordion>
-              ))}
-              {/* <Grid item xs={12}>
-                <AddQuestionButtonComponent
+      <StudiesLayoutComponent>
+        <Box component="div" className="__section_header">
+          <Container disableGutters maxWidth="lg">
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs></Grid>
+              <Grid item>
+                <Button
+                  size="small"
+                  color="inherit"
                   onClick={() => {
-                    append(defaultQuestionValues);
+                    router.push(APP_ROUTES.STUDIES);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <LoadingButtonComponent
+                  showLoading={isLoadingUpdateBlukQuestion}
+                  btnProps={{
+                    size: "small",
+                    color: "inherit",
+                    disabled:
+                      isEditable === "false" || isLoadingUpdateBlukQuestion,
+                  }}
+                  onClick={handleSubmit(handleSubmitQuestions)}
+                >
+                  Save Changes
+                </LoadingButtonComponent>
+              </Grid>
+              <Grid item>
+                <Button size="small" onClick={openConfirmModel} color="primary">
+                  {selectedAudience?.length > 0
+                    ? "Launch Assessment"
+                    : "Continue to Audience"}
+                </Button>
+              </Grid>
+            </Grid>
+            <TabsSelectionComponent
+              tabIndex={tabIndex}
+              onChange={(_, value) => {
+                setTabIndex(value);
+              }}
+            />
+          </Container>
+        </Box>
+        <Box component="div" className="__section_content">
+          <Container disableGutters maxWidth="lg">
+            <Box mt={2} mb={2}>
+              {tabIndex === 0 && (
+                <Fragment>
+                  <WelcomeAssessmentComponent />
+                  <DragDropContext onDragEnd={reorder}>
+                    <Droppable droppableId="parent" type="parentContainer">
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                        >
+                          {questions.map((question: any, index) => {
+                            return (
+                              <Draggable
+                                key={question.id}
+                                draggableId={question.id}
+                                index={index}
+                              >
+                                {(provided: any) => (
+                                  <Box
+                                    mb={2}
+                                    component="div"
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                  >
+                                    <div
+                                      className="DragHandle"
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <QuestionAccordion
+                                        key={index + 1}
+                                        title={
+                                          watchQuestions[index].title
+                                            ? watchQuestions[index].title
+                                            : "[No Title]"
+                                        }
+                                        number={`${index + 1}`}
+                                        id={`${index + 1}-header`}
+                                        ariaControls={`${index + 1}-content`}
+                                      >
+                                        <Box p={2}>
+                                          <input
+                                            type="hidden"
+                                            defaultValue={question?._id}
+                                            {...register(
+                                              `questions.${index}._id`
+                                            )}
+                                          />
+
+                                          <Grid container spacing={2}>
+                                            <Grid item xs={12}>
+                                              <Box mb={1}>
+                                                <FormLabel>Title *</FormLabel>
+                                              </Box>
+                                              <TextInputFieldComponent
+                                                id="question-title"
+                                                name={`questions.${index}.title`}
+                                                label=""
+                                                defaultValue={question.title}
+                                                control={control}
+                                                rules={{
+                                                  required:
+                                                    "Title is a required field. Please provide a title.",
+                                                }}
+                                                textFieldProps={{
+                                                  placeholder: "Enter Title",
+                                                }}
+                                              />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                              <Box mb={1}>
+                                                <FormLabel>
+                                                  Add Question Type *
+                                                </FormLabel>
+                                              </Box>
+                                              <SelectInputFieldComponent
+                                                defaultValue={
+                                                  question.questionType
+                                                }
+                                                // readOnly={true}
+                                                options={QUESTION_TYPES_OPTIONS}
+                                                targetValue="value"
+                                                lableValue="label"
+                                                label=""
+                                                control={control}
+                                                id="question-type"
+                                                name={`questions.${index}.questionType`}
+                                                rules={{
+                                                  required:
+                                                    "Add Question Type is a required field. Please provide a Add Question Type.",
+                                                }}
+                                              />
+                                            </Grid>
+                                            {watchQuestions[index]
+                                              .questionType ===
+                                              QUESTION_TYPES.INTRODUCTION && (
+                                              <IntroductionFormComponent
+                                                control={control}
+                                                index={index}
+                                                question={question}
+                                              />
+                                            )}
+
+                                            {(watchQuestions[index]
+                                              .questionType ===
+                                              QUESTION_TYPES.AUDIO ||
+                                              watchQuestions[index]
+                                                .questionType ===
+                                                QUESTION_TYPES.TEXT) && (
+                                              <VoiceFormComponent
+                                                control={control}
+                                                index={index}
+                                                question={question}
+                                              />
+                                            )}
+                                            {watchQuestions[index]
+                                              .questionType ===
+                                              QUESTION_TYPES.VIDEO && (
+                                              <VideoTemplateFormComponent
+                                                control={control}
+                                                index={index}
+                                                question={question}
+                                              />
+                                            )}
+                                          </Grid>
+                                        </Box>
+                                      </QuestionAccordion>
+                                    </div>
+                                  </Box>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                  <Box>
+                    <AddQuestionButtonComponent
+                      onClick={() => {
+                        append(defaultQuestionValues);
+                      }}
+                    />
+                  </Box>
+                </Fragment>
+              )}
+              {tabIndex === 1 && (
+                <AudienceDataGridComponent
+                  onRowSelectionModelChange={(data) => {
+                    setSelectedAudiences(data);
                   }}
                 />
-              </Grid> */}
-            </Grid>
-          </Grid>
-        )}
-        {tabIndex === 1 && (
-          <AudienceDataGridComponent
-            onRowSelectionModelChange={(data) => {
-              setSelectedAudiences(data);
-            }}
-          />
-        )}
-      </Box>
+              )}
+            </Box>
+          </Container>
+        </Box>
+      </StudiesLayoutComponent>
       {openModel && (
         <ClosedDialogComponent
           open={openModel}

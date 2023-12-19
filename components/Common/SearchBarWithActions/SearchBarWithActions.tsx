@@ -8,34 +8,41 @@ import SearchInputComponent from "../SearchInput/SearchInput";
 interface SearchBarWithActionsComponentProps {
   onClickNewFoder: () => void;
   onClickStudyFolder: () => void;
+  onChangeSeachInput?:(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>void;
   showNewFolderButton?: boolean;
 }
 
 const SearchBarWithActionsComponent = ({
   onClickNewFoder,
   onClickStudyFolder,
+  onChangeSeachInput,
   showNewFolderButton = true,
 }: SearchBarWithActionsComponentProps) => {
   return (
     <Grid container columnSpacing={3} alignItems="center">
       <Grid item xs container>
         <Grid item xs={6}>
-          <SearchInputComponent placeholder="Search..." />
+          <SearchInputComponent placeholder="Search by studies, or binders..." onChange={onChangeSeachInput} />
         </Grid>
       </Grid>
-      {/* <Grid item>
+      <Grid item>
         <IconButton>
           <img alt="list-icon" src="/icons/list.svg" />
         </IconButton>
-      </Grid> */}
-      {/* <Grid item>
+      </Grid>
+      <Grid item>
         <IconButton>
           <img alt="grid-icon" src="/icons/grid.svg" />
         </IconButton>
-      </Grid> */}
+      </Grid>
       {showNewFolderButton && (
         <Grid item>
-          <Button onClick={onClickNewFoder} variant="outlined" color="inherit">
+          <Button
+            size="small"
+            onClick={onClickNewFoder}
+            color="inherit"
+            variant="contained"
+          >
             New Binder
           </Button>
         </Grid>
@@ -45,8 +52,8 @@ const SearchBarWithActionsComponent = ({
         <LoadingButtonComponent
           onClick={onClickStudyFolder}
           btnProps={{
-            variant: "contained",
-            color: "primary",
+            size: "small",
+
             startIcon: <img alt="plus-icon" src="/icons/plus_white.svg" />,
           }}
         >

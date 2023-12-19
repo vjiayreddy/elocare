@@ -69,21 +69,22 @@ export const lightTheme = createTheme({
       fontWeight: 500,
     },
     body2: {
-      fontSize: 12,
+      fontSize: 14,
       fontWeight: 500,
       lineHeight: "18px",
     },
     subtitle1: {
-      fontSize: 20,
+      fontSize: 18, 
       fontWeight: 700,
-      lineHeight: "28px",
+      lineHeight: "24px",
     },
     subtitle2: {
-      fontSize: 18,
-      fontWeight: 500,
+      fontSize: 16,
+      fontWeight: 600,
       lineHeight: "28px",
     },
   },
+
   components: {
     MuiAppBar: {
       defaultProps: {
@@ -91,8 +92,8 @@ export const lightTheme = createTheme({
         color: "inherit",
       },
       styleOverrides: {
-        root:{
-          height:APP_BAR_SIZE
+        root: {
+          height: APP_BAR_SIZE,
         },
         colorInherit: {
           borderBottom: `1px solid ${defaultTheme.palette.divider}`,
@@ -102,49 +103,51 @@ export const lightTheme = createTheme({
         },
       },
     },
-    MuiToolbar:{
+    MuiToolbar: {
       styleOverrides: {
-        root:{
-          height:APP_BAR_SIZE
+        root: {
+          height: APP_BAR_SIZE,
         },
       },
     },
     MuiButton: {
       defaultProps: {
-        disableElevation: true,
         variant: "contained",
+        color: "primary",
+        disableElevation: true,
+        fullWidth: true,
         size: "medium",
       },
       styleOverrides: {
         root: {
           textTransform: "none",
+        },
+        containedSecondary: {
+          backgroundColor: defaultTheme.palette.common.white,
+          border: `1px solid ${defaultTheme.palette.divider}`,
+          color: defaultTheme.palette.text.primary,
+        },
+        containedInherit: {
+          backgroundColor: defaultTheme.palette.common.white,
+          border: `1px solid ${defaultTheme.palette.divider}`,
+          color: defaultTheme.palette.text.primary,
+        },
+        textInherit: {
+          color: defaultTheme.palette.text.primary,
           fontSize: 16,
+          fontWeight: 600,
         },
         sizeMedium: {
-          height: 56,
-        },
-        colorInherit: {},
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
+          height: 55,
           fontSize: 18,
         },
-        sizeSmall: {},
-      },
-    },
-    MuiTextField: {
-      defaultProps: {
-        size: "medium",
-      },
-      styleOverrides: {
-        root: {
-          fontSize: 18,
+        sizeSmall: {
+          height: 41,
+          fontSize: 16,
         },
       },
     },
-    MuiTabs: {
+      MuiTabs: {
       styleOverrides: {
         root: {
           borderBottom: `1px solid ${defaultTheme?.palette?.divider}`,
@@ -161,6 +164,84 @@ export const lightTheme = createTheme({
       },
     },
   },
+
+  // components: {
+  //   MuiAppBar: {
+  //     defaultProps: {
+  //       elevation: 0,
+  //       color: "inherit",
+  //     },
+  //     styleOverrides: {
+  //       root:{
+  //         height:APP_BAR_SIZE
+  //       },
+  //       colorInherit: {
+  //         borderBottom: `1px solid ${defaultTheme.palette.divider}`,
+  //         display: "flex",
+  //         flexDirection: "column",
+  //         alignItems: "center",
+  //       },
+  //     },
+  //   },
+  //   MuiToolbar:{
+  //     styleOverrides: {
+  //       root:{
+  //         height:APP_BAR_SIZE
+  //       },
+  //     },
+  //   },
+  //   MuiButton: {
+  //     defaultProps: {
+  //       disableElevation: true,
+  //       variant: "contained",
+  //       size: "medium",
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         textTransform: "none",
+  //         fontSize: 16,
+  //       },
+  //       sizeMedium: {
+  //         height: 56,
+  //       },
+  //       colorInherit: {},
+  //     },
+  //   },
+  //   MuiInputBase: {
+  //     styleOverrides: {
+  //       root: {
+  //         fontSize: 18,
+  //       },
+  //       sizeSmall: {},
+  //     },
+  //   },
+  //   MuiTextField: {
+  //     defaultProps: {
+  //       size: "medium",
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         fontSize: 18,
+  //       },
+  //     },
+  //   },
+  //   MuiTabs: {
+  //     styleOverrides: {
+  //       root: {
+  //         borderBottom: `1px solid ${defaultTheme?.palette?.divider}`,
+  //       },
+  //     },
+  //   },
+  //   MuiTab: {
+  //     styleOverrides: {
+  //       root: {
+  //         textTransform: "none",
+  //         fontSize: 16,
+  //         fontWeight: 600,
+  //       },
+  //     },
+  //   },
+  // },
 });
 
 export const globalStyles = css`

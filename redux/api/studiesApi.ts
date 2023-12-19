@@ -127,16 +127,17 @@ export const studiesApi = createApi({
 
     fetchFoldersAndStudies: builder.query<
       { data: StudiesAndProjectFoldersResponseType },
-      { doctorId: string }
+      { doctorId: string; search?: string }
     >({
       providesTags: ["fetchFoldersAndStudies"],
-      query: ({ doctorId }) => {
+      query: ({ doctorId, search }) => {
         return {
           url: API_ROUTES.FETCH_FOLDERS_STUDIES,
           method: "GET",
           params: {
             doctorId,
             sortOrder: JSON.stringify(["alphabetical"]),
+            search,
           },
         };
       },
@@ -199,11 +200,14 @@ export const studiesApi = createApi({
       query: ({ studyId }) =>
         `${API_ROUTES.FETCH_SINGLE_ASSESSMENT_QUESTIONS}?studyId=${studyId}`,
       transformResponse: (response: any) => {
-        let questions: any[] = [];
+        let data: any = {};
         if (response?.data) {
-          questions = response?.data;
+          data = {
+            studyData: response?.data?.studyData,
+            questions: response?.data?.questions,
+          };
         }
-        return questions;
+        return data;
       },
     }),
     fetchConditionalBasedAssessmentTemplates: builder.query<
